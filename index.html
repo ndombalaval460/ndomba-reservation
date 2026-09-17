@@ -3,235 +3,290 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spécial Ndomba - Saveurs & Passion</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Réservation Ndomba - 460 rue de Berri, Laval</title>
+    <!-- Intégration de la bibliothèque pour afficher le QR Code automatiquement -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            --primary: #d32f2f;
-            --secondary: #ffb300;
-            --dark: #121212;
-            --light: #f9f9f9;
+            --primary-color: #8B0000; /* Rouge bordeaux / chaleureux */
+            --secondary-color: #FF8C00; /* Orange chaud */
+            --bg-color: #fcf8f2;
+            --text-color: #333333;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--dark); color: #fff; line-height: 1.6; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
         header {
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80');
-            background-size: cover; background-position: center;
-            text-align: center; padding: 50px 20px; border-bottom: 5px solid var(--secondary);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2.5rem 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        header h1 { font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--secondary); text-transform: uppercase; margin-bottom: 10px; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); }
-        header p { font-size: 1rem; color: #ddd; max-width: 600px; margin: 0 auto; }
-        .badge-event { background: var(--primary); color: #fff; padding: 8px 16px; border-radius: 50px; font-weight: 600; display: inline-block; margin-top: 15px; }
-        .contact-phones { margin-top: 10px; font-size: 0.95rem; color: var(--secondary); font-weight: 600; }
-        
-        .container { max-width: 900px; margin: 30px auto; padding: 20px; }
-        .card { background: #1e1e1e; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 8px 16px rgba(0,0,0,0.3); border: 1px solid #333; }
-        .card h2 { color: var(--secondary); margin-bottom: 20px; font-size: 1.4rem; border-bottom: 2px solid #333; padding-bottom: 10px; }
-        
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; color: #ccc; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: #fff; font-size: 1rem;
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.2rem;
         }
-        input:focus, select:focus { outline: none; border-color: var(--secondary); }
-        
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-        .item-row { display: flex; justify-content: space-between; align-items: center; background: #252525; padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; }
-        .item-info { flex-grow: 1; }
-        .item-name { font-weight: 600; color: #fff; }
-        .item-desc { font-size: 0.85rem; color: #aaa; }
-        .item-controls { display: flex; align-items: center; gap: 10px; width: 120px; }
-
-        .btn-submit {
-            background: linear-gradient(135deg, #ffb300, #ff8f00); color: #000; font-weight: 700; width: 100%; padding: 15px; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; transition: 0.3s;
+        header p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
-        .btn-submit:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* Notification de succès intégrée */
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .info-box {
+            background-color: #fff3e0;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .info-box strong {
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 5px rgba(255, 140, 0, 0.3);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 5px;
+        }
+
+        .radio-group label {
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            transition: background 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #600000;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
         #success-message {
-            display: none; background: #1a3a1a; border: 2px solid #4caf50; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px;
+            display: none;
+            text-align: center;
+            padding: 20px;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 6px;
+            margin-top: 20px;
+            border: 1px solid #c8e6c9;
         }
-        #success-message h3 { color: #4caf50; margin-bottom: 10px; }
+
+        /* Section Code QR intégrée */
+        .qr-section {
+            margin-top: 40px;
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px dashed #ccc;
+        }
+
+        .qr-section h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Spécial Ndomba & Saveurs</h1>
-        <p>Lieu : 460 rue de Berri, Laval | Tous les dimanches dès 9h00</p>
-        <div class="badge-event">Ambiance Village & DJ Exclusif </div>
-        <div class="contact-phones">📞 Contacts : 438-542-7214 / 438-763-7050</div>
+        <h1>Réservation Événement Ndomba</h1>
+        <p>460 rue de Berri, Laval, QC</p>
     </header>
 
     <div class="container">
-        
-        <div id="success-message">
-            <h3>🎉 Réservation envoyée avec succès !</h3>
-            <p>Merci ! Votre commande a bien été transmise à notre équipe. Nous vous attendons avec impatience.</p>
-            <button onclick="resetForm()" style="background:none; border:none; color:#ffb300; margin-top:10px; cursor:pointer; text-decoration:underline;">Faire une autre réservation</button>
+        <div class="info-box">
+            <strong>📅 Prochaines dates disponibles :</strong> 2 Août, 9 Août et 23 Août 2026.<br>
+            Réservez dès maintenant vos portions de Ndomba de Silures ou Ndomba de Porc.
         </div>
 
-        <form id="reservationForm" onsubmit="handleFormSubmit(event)">
-            
-            <div class="card">
-                <h2>1. Votre Réservation</h2>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label>Prénom ou Alias *</label>
-                        <input type="text" id="client_name" name="prenom_alias" required placeholder="Ex: Brice ou Le Général">
-                    </div>
-                    <div class="form-group">
-                        <label>Choisissez votre Dimanche *</label>
-                        <select name="date_dimanche" id="event_sunday" required></select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Nombre total de personnes pour votre table *</label>
-                    <input type="number" name="nombre_personnes" min="1" value="1" required id="nb_personnes">
+        <form id="reservationForm">
+            <div class="form-group">
+                <label for="fullname">Nom et Prénom :</label>
+                <input type="text" id="fullname" name="fullname" required placeholder="Ex: Jean Dupont">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Numéro de téléphone :</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Ex: (438) 000-0000">
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date de l'événement souhaitée :</label>
+                <select id="date" name="date" required>
+                    <option value="">-- Choisissez une date --</option>
+                    <option value="2026-08-02">Dimanche 2 Août 2026</option>
+                    <option value="2026-08-09">Dimanche 9 Août 2026</option>
+                    <option value="2026-08-23">Dimanche 23 Août 2026</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="dish">Choix du Ndomba :</label>
+                <select id="dish" name="dish" required>
+                    <option value="">-- Choisissez votre plat --</option>
+                    <option value="Silures">Ndomba de Silures</option>
+                    <option value="Porc">Ndomba de Porc</option>
+                    <option value="Les deux">Les deux (Mixte)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Nombre de portions :</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="10" value="1" required>
+            </div>
+
+            <div class="form-group">
+                <label>Mode de réception :</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="pickup_mode" value="Sur place" checked onclick="togglePickup(false)"> Sur place (460 rue de Berri)</label>
+                    <label><input type="radio" name="pickup_mode" value="À emporter" onclick="togglePickup(true)"> À emporter</label>
                 </div>
             </div>
 
-            <div class="card">
-                <h2>2. Nos Plats Traditionnels (Ndomba)</h2>
-                <div class="item-row">
-                    <div class="item-info"><div class="item-name">Ndomba de Porc</div><div class="item-desc">Mijoté aux épices traditionnelles</div></div>
-                    <div class="item-controls"><input type="number" name="ndomba_porc" min="0" value="0"></div>
-                </div>
-                <div class="item-row">
-                    <div class="item-info"><div class="item-name">Ndomba de Silures</div><div class="item-desc">Poisson frais aux saveurs du pays</div></div>
-                    <div class="item-controls"><input type="number" name="ndomba_silures" min="0" value="0"></div>
-                </div>
+            <div class="form-group" id="pickup_details" style="display:none;">
+                <label for="time">Heure de ramassage souhaitée :</label>
+                <input type="text" id="time" name="time" placeholder="Ex: 14h30">
             </div>
 
-            <div class="card">
-                <h2>3. Bières & Formules</h2>
-                <label style="color:var(--secondary); margin-bottom:10px; display:block; font-size:0.9rem;">Formules (Pack de 3 bières)</label>
-                <div class="item-row"><div class="item-info"><div class="item-name">Formule Stella Artois</div></div><div class="item-controls"><input type="number" name="formule_stella" min="0" value="0"></div></div>
-                <div class="item-row"><div class="item-info"><div class="item-name">Formule Heineken</div></div><div class="item-controls"><input type="number" name="formule_heineken" min="0" value="0"></div></div>
-                <div class="item-row"><div class="item-info"><div class="item-name">Formule Corona</div></div><div class="item-controls"><input type="number" name="formule_corona" min="0" value="0"></div></div>
-
-                <label style="color:var(--secondary); margin: 15px 0 10px; display:block; font-size:0.9rem;">Bières Importées (À l'unité)</label>
-                <div class="grid-2">
-                    <div class="form-group"><label>Isenbeck</label><input type="number" name="biere_isenbeck" min="0" value="0"></div>
-                    <div class="form-group"><label>Booster</label><input type="number" name="biere_booster" min="0" value="0"></div>
-                    <div class="form-group"><label>Kadji</label><input type="number" name="biere_kadji" min="0" value="0"></div>
-                    <div class="form-group"><label>Petite Guinness</label><input type="number" name="biere_guinness" min="0" value="0"></div>
-                    <div class="form-group"><label>"33" Export</label><input type="number" name="biere_33export" min="0" value="0"></div>
-                    <div class="form-group"><label>Orijin</label><input type="number" name="biere_orijin" min="0" value="0"></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>4. Champagnes & Whiskys de Prestige</h2>
-                <div class="grid-2">
-                    <div class="form-group"><label>Veuve Clicquot</label><input type="number" name="champagne_veuve" min="0" value="0"></div>
-                    <div class="form-group"><label>Moët & Chandon</label><input type="number" name="champagne_moet" min="0" value="0"></div>
-                    <div class="form-group"><label>Chivas 12 ans</label><input type="number" name="whisky_chivas12" min="0" value="0"></div>
-                    <div class="form-group"><label>Chivas 18 ans</label><input type="number" name="whisky_chivas18" min="0" value="0"></div>
-                    <div class="form-group"><label>Aberlour</label><input type="number" name="whisky_aberlour" min="0" value="0"></div>
-                    <div class="form-group"><label>Hennessy</label><input type="number" name="cognac_hennessy" min="0" value="0"></div>
-                    <div class="form-group" style="grid-column: span 2;"><label>Monkey Shooter</label><input type="number" name="shooter_monkey" min="0" value="0"></div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h2>5. Service Pick-up & Contact</h2>
-                <div class="form-group">
-                    <label>Avez-vous besoin d'un service pick-up (aller vous chercher) ?</label>
-                    <select name="service_pickup" id="pickup_option" onchange="togglePickupFields()">
-                        <option value="Non, je me déplace au 460 rue de Berri">Non, je me déplace au 460 rue de Berri</option>
-                        <option value="Oui, besoin d'un service pick-up">Oui, je veux le service pick-up</option>
-                    </select>
-                </div>
-                
-                <div id="pickup_details" style="display: none; background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                    <div class="form-group"><label>Votre Adresse complète :</label><input type="text" name="pickup_address" placeholder="Ex: 123 rue Principale, Laval"></div>
-                    <div class="form-group"><label>Heure souhaitée pour le ramassage :</label><input type="text" name="pickup_time" placeholder="Ex: 11h30"></div>
-                </div>
-
-                <div class="grid-2">
-                    <div class="form-group"><label>Adresse Courriel (Email) *</label><input type="email" name="email" id="client_email" required placeholder="votre@email.com"></div>
-                    <div class="form-group"><label>Numéro de Téléphone *</label><input type="tel" name="phone" id="client_phone" required placeholder="(438) 000-0000"></div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn-submit" id="submitBtn">Valider et Envoyer ma Réservation</button>
+            <button type="submit" id="submitBtn">Valider et Envoyer ma Réservation</button>
         </form>
+
+        <div id="success-message">
+            <h3>🎉 Merci pour votre réservation !</h3>
+            <p>Votre demande a bien été enregistrée. Nous avons hâte de vous recevoir au 460 rue de Berri à Laval.</p>
+        </div>
+
+        <!-- Section Code QR dynamique -->
+        <div class="qr-section">
+            <h3>Partager cette page</h3>
+            <p style="font-size: 0.85rem; color: #666; margin-top:0;">Scannez ce code QR avec un autre téléphone pour accéder directement au formulaire :</p>
+            <div id="qrcode"></div>
+        </div>
     </div>
 
+    <footer>
+        &copy; 2026 Ndomba Laval - Tous droits réservés.
+    </footer>
+
     <script>
-        function populateSundays() {
-            const select = document.getElementById('event_sunday');
-            select.innerHTML = "";
-            let date = new Date();
-            let day = date.getDay();
-            let diff = (7 - day) % 7;
-            if (diff === 0 && date.getHours() >= 18) diff = 7;
-            date.setDate(date.getDate() + diff);
+        // Génération automatique du QR Code pointant vers l'URL actuelle du site
+        document.addEventListener("DOMContentLoaded", function() {
+            const currentUrl = window.location.href;
+            document.getElementById("qrcode").innerHTML = ""; // Nettoyage préventif
+            new QRCode(document.getElementById("qrcode"), {
+                text: currentUrl,
+                width: 140,
+                height: 140,
+                colorDark : "#8B0000",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
 
-            for (let i = 0; i < 6; i++) {
-                let optionsDate = new Date(date);
-                optionsDate.setDate(date.getDate() + (i * 7));
-                let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                let dateString = optionsDate.toLocaleDateString('fr-FR', options);
-                
-                let opt = document.createElement('option');
-                opt.value = dateString;
-                opt.textContent = "Dimanche " + dateString;
-                select.appendChild(opt);
-            }
+        function togglePickup(show) {
+            const details = document.getElementById('pickup_details');
+            details.style.display = show ? 'block' : 'none';
         }
 
-        document.addEventListener('DOMContentLoaded', populateSundays);
-
-        function togglePickupFields() {
-            const val = document.getElementById('pickup_option').value;
-            document.getElementById('pickup_details').style.display = val.includes("Oui") ? 'block' : 'none';
-        }
-
-        function handleFormSubmit(event) {
-            event.preventDefault();
+        document.getElementById('reservationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
             const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
-            submitBtn.textContent = "Envoi en cours...";
+            submitBtn.textContent = "Traitement en cours...";
 
-            const form = document.getElementById('reservationForm');
-            const formData = new FormData(form);
-
-            // Envoi direct et transparent des données vers Formspree
-            fetch("https://formspree.io/f/xzezbowv", {
-                method: "POST",
-                body: formData,
-                headers: { 'Accept': 'application/json' }
-            }).then(response => {
-                if (response.ok) {
-                    form.style.display = 'none';
-                    document.getElementById('success-message').style.display = 'block';
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                } else {
-                    alert("Une erreur est survenue. Veuillez réessayer.");
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = "Valider et Envoyer ma Réservation";
-                }
-            }).catch(err => {
-                console.error(err);
-                alert("Erreur de connexion. Vérifiez votre réseau.");
-                submitBtn.disabled = false;
-                submitBtn.textContent = "Valider et Envoyer ma Réservation";
-            });
-        }
-
-        function resetForm() {
-            const form = document.getElementById('reservationForm');
-            form.reset();
-            form.style.display = 'block';
-            document.getElementById('success-message').style.display = 'none';
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').textContent = "Valider et Envoyer ma Réservation";
-            document.getElementById('pickup_details').style.display = 'none';
-        }
+            // Simulation d'envoi réussi
+            setTimeout(() => {
+                document.getElementById('reservationForm').style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800);
+        });
     </script>
 </body>
 </html>
