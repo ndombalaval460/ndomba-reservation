@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spécial Ndomba & Saveurs - Réservation</title>
+    <title>Spécial Ndomba & Saveurs - Laval</title>
     <!-- Bibliothèque pour générer le QR Code automatiquement -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
@@ -65,11 +65,51 @@
             margin-top: 5px;
         }
 
+        /* Barre de navigation / Choix des modes */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px auto 10px auto;
+            max-width: 750px;
+            padding: 0 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background-color: var(--card-bg);
+            color: var(--accent-gold);
+            border: 2px solid var(--accent-gold);
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            flex: 1;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .nav-btn.active, .nav-btn:hover {
+            background-color: var(--accent-gold);
+            color: var(--bg-dark);
+            transform: translateY(-2px);
+        }
+
         /* Conteneur principal */
         .container {
             max-width: 750px;
-            margin: 30px auto;
+            margin: 20px auto 40px auto;
             padding: 0 15px;
+        }
+
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
         }
 
         .card {
@@ -105,7 +145,8 @@
         input[type="text"],
         input[type="tel"],
         input[type="number"],
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 12px;
             background-color: var(--input-bg);
@@ -117,7 +158,7 @@
             transition: border-color 0.3s;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--accent-gold);
         }
@@ -134,7 +175,7 @@
             cursor: pointer;
         }
 
-        button {
+        button.submit-btn {
             background-color: var(--accent-gold);
             color: #121212;
             border: none;
@@ -147,15 +188,11 @@
             transition: background 0.3s, transform 0.1s;
         }
 
-        button:hover {
+        button.submit-btn:hover {
             background-color: #faa307;
         }
 
-        button:active {
-            transform: scale(0.98);
-        }
-
-        #success-message {
+        .success-message {
             display: none;
             text-align: center;
             padding: 25px;
@@ -166,14 +203,14 @@
             margin-top: 20px;
         }
 
-        /* Section QR Code intégrée aux couleurs du design */
+        /* Section QR Code */
         .qr-card {
             text-align: center;
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             padding: 25px;
             border-radius: 10px;
-            margin-bottom: 40px;
+            margin-top: 30px;
         }
 
         .qr-card h3 {
@@ -209,71 +246,152 @@
         <div class="contacts-banner">📞 Contacts : 438-542-7214 / 438-763-7050</div>
     </header>
 
+    <!-- Boutons de Navigation / Choix -->
+    <div class="nav-buttons">
+        <button class="nav-btn active" onclick="switchTab('reservation')">📅 Réserver une table</button>
+        <button class="nav-btn" onclick="switchTab('commande')">🛒 Passer une commande</button>
+        <button class="nav-btn" onclick="switchTab('gagnant')">🏆 Gagnant du jour</button>
+    </div>
+
     <div class="container">
-        <form id="reservationForm">
-            <!-- Bloc 1 : Votre Réservation -->
-            <div class="card">
-                <h2>1. Votre Réservation</h2>
-                
-                <div class="form-group">
-                    <label for="fullname">Prénom ou Alias *</label>
-                    <input type="text" id="fullname" name="fullname" required placeholder="Ex: Brice ou Le Général">
-                </div>
 
-                <div class="form-group">
-                    <label for="date">Choisissez votre Dimanche *</label>
-                    <select id="date" name="date" required>
-                        <option value="">-- Sélectionnez une date --</option>
-                        <option value="2026-08-02">Dimanche 2 août 2026</option>
-                        <option value="2026-08-09">Dimanche 9 août 2026</option>
-                        <option value="2026-08-23">Dimanche 23 août 2026</option>
-                        <option value="2026-09-20">Dimanche 20 septembre 2026</option>
-                    </select>
-                </div>
+        <!-- ONGLET 1 : RÉSERVATION DE TABLE -->
+        <div id="tab-reservation" class="section-content active">
+            <form id="reservationForm">
+                <div class="card">
+                    <h2>1. Votre Réservation de Table</h2>
+                    
+                    <div class="form-group">
+                        <label for="res_name">Prénom ou Alias *</label>
+                        <input type="text" id="res_name" name="res_name" required placeholder="Ex: Brice ou Le Général">
+                    </div>
 
-                <div class="form-group">
-                    <label for="quantity">Nombre total de personnes pour votre table *</label>
-                    <input type="number" id="quantity" name="quantity" min="1" max="20" value="1" required>
-                </div>
+                    <div class="form-group">
+                        <label for="res_date">Choisissez votre Dimanche *</label>
+                        <select id="res_date" name="res_date" required>
+                            <option value="">-- Sélectionnez une date --</option>
+                            <option value="Dimanche 2 août 2026">Dimanche 2 août 2026</option>
+                            <option value="Dimanche 9 août 2026">Dimanche 9 août 2026</option>
+                            <option value="Dimanche 23 août 2026">Dimanche 23 août 2026</option>
+                            <option value="Dimanche 20 septembre 2026">Dimanche 20 septembre 2026</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label>Mode de réception *</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="pickup_mode" value="Sur place" checked onclick="togglePickup(false)"> Sur place (460 rue de Berri)</label>
-                        <label><input type="radio" name="pickup_mode" value="À emporter" onclick="togglePickup(true)"> À emporter</label>
+                    <div class="form-group">
+                        <label for="res_people">Nombre total de personnes pour votre table *</label>
+                        <input type="number" id="res_people" name="res_people" min="1" max="20" value="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mode de réception *</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="res_mode" value="Sur place" checked onclick="togglePickup(false)"> Sur place (460 rue de Berri)</label>
+                            <label><input type="radio" name="res_mode" value="À emporter" onclick="togglePickup(true)"> À emporter</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="pickup_details" style="display:none;">
+                        <label for="res_time">Heure de ramassage souhaitée :</label>
+                        <input type="text" id="res_time" name="res_time" placeholder="Ex: 14h30">
                     </div>
                 </div>
 
-                <div class="form-group" id="pickup_details" style="display:none;">
-                    <label for="time">Heure de ramassage souhaitée :</label>
-                    <input type="text" id="time" name="time" placeholder="Ex: 14h30">
+                <div class="card">
+                    <h2>2. Vos Coordonnées</h2>
+                    <div class="form-group">
+                        <label for="res_phone">Numéro de téléphone *</label>
+                        <input type="tel" id="res_phone" name="res_phone" required placeholder="Ex: 438-542-7214">
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="resBtn">Valider et Envoyer ma Réservation</button>
+                </div>
+            </form>
+
+            <div id="res-success" class="success-message">
+                <h2 style="color: #d8f3dc; border:none; margin-top:0;">🎉 Réservation enregistrée !</h2>
+                <p>Votre table est bien enregistrée pour notre événement au 460 rue de Berri à Laval. Nous vous attendons avec impatience !</p>
+            </div>
+        </div>
+
+        <!-- ONGLET 2 : PASSER UNE COMMANDE (Par Courriel, sans nombre de personnes) -->
+        <div id="tab-commande" class="section-content">
+            <form id="orderForm" onsubmit="sendOrderEmail(event)">
+                <div class="card">
+                    <h2>1. Détails de votre Commande</h2>
+                    
+                    <div class="form-group">
+                        <label for="ord_name">Prénom ou Alias *</label>
+                        <input type="text" id="ord_name" name="ord_name" required placeholder="Ex: Brice ou Le Général">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ord_date">Pour quel Dimanche ? *</label>
+                        <select id="ord_date" name="ord_date" required>
+                            <option value="">-- Sélectionnez une date --</option>
+                            <option value="Dimanche 2 août 2026">Dimanche 2 août 2026</option>
+                            <option value="Dimanche 9 août 2026">Dimanche 9 août 2026</option>
+                            <option value="Dimanche 23 août 2026">Dimanche 23 août 2026</option>
+                            <option value="Dimanche 20 septembre 2026">Dimanche 20 septembre 2026</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ord_dishes">Désignations des plats (Ex: Ndomba de Silures, Ndomba de Porc...) *</label>
+                        <textarea id="ord_dishes" name="ord_dishes" rows="4" required placeholder="Indiquez vos plats et quantités (ex: 2x Ndomba de Silures, 1x Ndomba de Porc)"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Mode de réception *</label>
+                        <div class="radio-group">
+                            <label><input type="radio" name="ord_mode" value="Sur place" checked onclick="toggleOrdPickup(false)"> Sur place (460 rue de Berri)</label>
+                            <label><input type="radio" name="ord_mode" value="À emporter" onclick="toggleOrdPickup(true)"> À emporter</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="ord_pickup_details" style="display:none;">
+                        <label for="ord_time">Heure de retrait souhaitée :</label>
+                        <input type="text" id="ord_time" name="ord_time" placeholder="Ex: 13h00">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>2. Vos Coordonnées</h2>
+                    <div class="form-group">
+                        <label for="ord_phone">Numéro de téléphone *</label>
+                        <input type="tel" id="ord_phone" name="ord_phone" required placeholder="Ex: 438-542-7214">
+                    </div>
+
+                    <button type="submit" class="submit-btn">Envoyer ma Commande par Courriel ✉️</button>
+                </div>
+            </form>
+
+            <div id="ord-success" class="success-message">
+                <h2 style="color: #d8f3dc; border:none; margin-top:0;">✉️ Préparation du courriel...</h2>
+                <p>Votre application de messagerie va s'ouvrir pour transmettre votre commande directement !</p>
+            </div>
+        </div>
+
+        <!-- ONGLET 3 : GAGNANT DU JOUR -->
+        <div id="tab-gagnant" class="section-content">
+            <div class="card" style="text-align: center; padding: 40px 20px;">
+                <h2 style="border: none; font-size: 1.8rem; margin-bottom: 15px;">🏆 Le Gagnant du Jour</h2>
+                <p style="color: #aaa; font-size: 1.05rem; margin-bottom: 25px;">
+                    Chaque dimanche lors de notre événement au 460 rue de Berri, un tirage au sort récompense l'un de nos invités !
+                </p>
+                <div style="background-color: var(--input-bg); border: 2px dashed var(--accent-gold); padding: 25px; border-radius: 8px; display: inline-block; width: 100%; box-sizing: border-box;">
+                    <span style="font-size: 1.3rem; color: var(--accent-gold); font-weight: bold;">Le tirage aura lieu ce dimanche !</span>
+                    <p style="margin-top: 10px; color: #ddd; font-size: 0.95rem;">Restez présent sur place ou connecté pour découvrir si vous avez gagné.</p>
                 </div>
             </div>
-
-            <!-- Bloc 2 : Vos Coordonnées -->
-            <div class="card">
-                <h2>2. Vos Coordonnées</h2>
-
-                <div class="form-group">
-                    <label for="phone">Numéro de téléphone *</label>
-                    <input type="tel" id="phone" name="phone" required placeholder="Ex: 438-542-7214">
-                </div>
-
-                <button type="submit" id="submitBtn">Valider et Envoyer ma Réservation</button>
-            </div>
-        </form>
-
-        <div id="success-message">
-            <h2 style="color: #d8f3dc; border:none; margin-top:0;">🎉 Merci pour votre réservation !</h2>
-            <p>Votre table est bien enregistrée pour notre événement au 460 rue de Berri à Laval. Nous vous attendons avec impatience !</p>
         </div>
 
         <!-- Section Code QR Élégante -->
         <div class="qr-card">
             <h3>Partager l'événement</h3>
-            <p style="font-size: 0.85rem; color: #aaa; margin:0;">Scannez ce code QR pour ouvrir le formulaire instantanément sur un autre appareil :</p>
+            <p style="font-size: 0.85rem; color: #aaa; margin:0;">Scannez ce code QR pour ouvrir le site instantanément sur un autre appareil :</p>
             <div id="qrcode"></div>
         </div>
+
     </div>
 
     <footer>
@@ -281,7 +399,25 @@
     </footer>
 
     <script>
-        // Génération dynamique du QR Code pointant vers l'URL en ligne
+        // Gestion des onglets
+        function switchTab(tabName) {
+            document.querySelectorAll('.section-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            event.currentTarget.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function togglePickup(show) {
+            document.getElementById('pickup_details').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleOrdPickup(show) {
+            document.getElementById('ord_pickup_details').style.display = show ? 'block' : 'none';
+        }
+
+        // Génération automatique du QR Code pointant vers l'URL en ligne
         document.addEventListener("DOMContentLoaded", function() {
             const currentUrl = window.location.href;
             document.getElementById("qrcode").innerHTML = ""; 
@@ -295,24 +431,50 @@
             });
         });
 
-        function togglePickup(show) {
-            const details = document.getElementById('pickup_details');
-            details.style.display = show ? 'block' : 'none';
-        }
-
+        // Simulation soumission réservation
         document.getElementById('reservationForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Validation en cours...";
+            const btn = document.getElementById('resBtn');
+            btn.disabled = true;
+            btn.textContent = "Validation en cours...";
 
             setTimeout(() => {
                 document.getElementById('reservationForm').style.display = 'none';
-                document.getElementById('success-message').style.display = 'block';
-                window.scrollTo({ top: 0, behavior: 'smooth' }}>
+                document.getElementById('res-success').style.display = 'block';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 800);
         });
+
+        // Envoi de la commande par courriel (ouvre le client mail avec les détails pré-remplis)
+        function sendOrderEmail(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('ord_name').value;
+            const date = document.getElementById('ord_date').value;
+            const dishes = document.getElementById('ord_dishes').value;
+            const mode = document.querySelector('input[name="ord_mode"]:checked').value;
+            const time = document.getElementById('ord_time').value || 'Non spécifié';
+            const phone = document.getElementById('ord_phone').value;
+
+            const recipient = "mougnolbrice@gmail.com"; // Votre adresse courriel de réception
+            const subject = encodeURIComponent("Nouvelle Commande Ndomba de " + name);
+            const body = encodeURIComponent(
+                "Bonjour,\n\nVoici une nouvelle commande passée via le site web :\n\n" +
+                "- Nom / Alias : " + name + "\n" +
+                "- Date de l'événement : " + date + "\n" +
+                "- Désignations des plats : \n" + dishes + "\n\n" +
+                "- Mode de réception : " + mode + (mode === 'À emporter' ? ' (Heure : ' + time + ')' : '') + "\n" +
+                "- Téléphone : " + phone + "\n\n" +
+                "Cordialement."
+            );
+
+            document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('ord-success').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Ouvre le client de messagerie de l'appareil
+            window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+        }
     </script>
 </body>
 </html>
