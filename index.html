@@ -65,10 +65,10 @@
         
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-weight: 500; color: #ccc; }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select, textarea {
             width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: #fff; font-size: 1rem;
         }
-        input:focus, select:focus { outline: none; border-color: var(--secondary); }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--secondary); }
         
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
@@ -109,30 +109,31 @@
 
     <div class="container">
         
-        <!-- ONGLET 1 : RÉSERVER UNE TABLE -->
+        <!-- ONGLET 1 : RÉSERVER UNE TABLE (Modèle complet de votre image) -->
         <div id="tab-reservation" class="section-content active">
             <div id="success-message" class="success-message">
                 <h3>🎉 Réservation envoyée avec succès !</h3>
-                <p>Merci ! Votre réservation a bien été transmise à notre équipe. Nous vous attendons avec impatience.</p>
-                <button onclick="resetForm('reservationForm', 'success-message')" style="background:none; border:none; color:#ffb300; margin-top:10px; cursor:pointer; text-decoration:underline;">Faire une autre réservation</button>
+                <p>Merci ! Votre commande a bien été transmise à notre équipe. Nous vous attendons avec impatience.</p>
+                <button onclick="resetForm()" style="background:none; border:none; color:#ffb300; margin-top:10px; cursor:pointer; text-decoration:underline;">Faire une autre réservation</button>
             </div>
 
-            <form id="reservationForm" onsubmit="handleFormSubmit(event, 'reservationForm', 'success-message', 'submitBtn')">
+            <form id="reservationForm" onsubmit="handleFormSubmit(event)">
+                
                 <div class="card">
                     <h2>1. Votre Réservation</h2>
                     <div class="grid-2">
                         <div class="form-group">
                             <label>Prénom ou Alias *</label>
-                            <input type="text" name="prenom_alias" required placeholder="Ex: Brice ou Le Général">
+                            <input type="text" id="client_name" name="prenom_alias" required placeholder="Ex: Brice ou Le Général">
                         </div>
                         <div class="form-group">
                             <label>Choisissez votre Dimanche *</label>
-                            <select name="date_dimanche" class="event_sunday" required></select>
+                            <select name="date_dimanche" id="event_sunday" required></select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label>Nombre total de personnes pour votre table *</label>
-                        <input type="number" name="nombre_personnes" min="1" value="1" required>
+                        <input type="number" name="nombre_personnes" min="1" value="1" required id="nb_personnes">
                     </div>
                 </div>
 
@@ -183,20 +184,20 @@
                     <h2>5. Service Pick-up & Contact</h2>
                     <div class="form-group">
                         <label>Avez-vous besoin d'un service pick-up (aller vous chercher) ?</label>
-                        <select name="service_pickup" class="pickup_option" onchange="togglePickupFields(this, 'pickup_details')">
+                        <select name="service_pickup" id="pickup_option" onchange="togglePickupFields()">
                             <option value="Non, je me déplace au 460 rue de Berri">Non, je me déplace au 460 rue de Berri</option>
                             <option value="Oui, besoin d'un service pick-up">Oui, je veux le service pick-up</option>
                         </select>
                     </div>
                     
-                    <div class="pickup_details" style="display: none; background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                    <div id="pickup_details" style="display: none; background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
                         <div class="form-group"><label>Votre Adresse complète :</label><input type="text" name="pickup_address" placeholder="Ex: 123 rue Principale, Laval"></div>
                         <div class="form-group"><label>Heure souhaitée pour le ramassage :</label><input type="text" name="pickup_time" placeholder="Ex: 11h30"></div>
                     </div>
 
                     <div class="grid-2">
-                        <div class="form-group"><label>Adresse Courriel (Email) *</label><input type="email" name="email" required placeholder="votre@email.com"></div>
-                        <div class="form-group"><label>Numéro de Téléphone *</label><input type="tel" name="phone" required placeholder="(438) 000-0000"></div>
+                        <div class="form-group"><label>Adresse Courriel (Email) *</label><input type="email" name="email" id="client_email" required placeholder="votre@email.com"></div>
+                        <div class="form-group"><label>Numéro de Téléphone *</label><input type="tel" name="phone" id="client_phone" required placeholder="(438) 000-0000"></div>
                     </div>
                 </div>
 
@@ -204,81 +205,53 @@
             </form>
         </div>
 
-        <!-- ONGLET 2 : PASSER UNE COMMANDE (Sans service pick-up, avec email et téléphone) -->
+        <!-- ONGLET 2 : PASSER UNE COMMANDE (Saisie rapide par désignations et envoi par courriel) -->
         <div id="tab-commande" class="section-content">
-            <div id="order-success-message" class="success-message">
-                <h3>🎉 Commande envoyée avec succès !</h3>
-                <p>Merci ! Votre commande a bien été transmise à notre équipe.</p>
-                <button onclick="resetForm('orderForm', 'order-success-message')" style="background:none; border:none; color:#ffb300; margin-top:10px; cursor:pointer; text-decoration:underline;">Passer une autre commande</button>
+            <div id="ord-success" class="success-message">
+                <h3>✉️ Redirection vers votre courriel...</h3>
+                <p>Votre application de messagerie s'ouvre pour transmettre votre commande directement à l'équipe !</p>
             </div>
 
-            <form id="orderForm" onsubmit="handleFormSubmit(event, 'orderForm', 'order-success-message', 'orderSubmitBtn')">
+            <form id="orderForm" onsubmit="sendOrderEmail(event)">
                 <div class="card">
-                    <h2>1. Votre Commande</h2>
+                    <h2>1. Votre Commande Directe</h2>
                     <div class="grid-2">
                         <div class="form-group">
                             <label>Prénom ou Alias *</label>
-                            <input type="text" name="prenom_alias" required placeholder="Ex: Brice ou Le Général">
+                            <input type="text" id="ord_name" required placeholder="Ex: Brice ou Le Général">
                         </div>
                         <div class="form-group">
                             <label>Choisissez votre Dimanche *</label>
-                            <select name="date_dimanche" class="event_sunday" required></select>
+                            <select id="ord_sunday" required></select>
                         </div>
                     </div>
-                </div>
-
-                <div class="card">
-                    <h2>2. Nos Plats Traditionnels (Ndomba)</h2>
-                    <div class="item-row">
-                        <div class="item-info"><div class="item-name">Ndomba de Porc</div><div class="item-desc">Mijoté aux épices traditionnelles</div></div>
-                        <div class="item-controls"><input type="number" name="ndomba_porc" min="0" value="0"></div>
-                    </div>
-                    <div class="item-row">
-                        <div class="item-info"><div class="item-name">Ndomba de Silures</div><div class="item-desc">Poisson frais aux saveurs du pays</div></div>
-                        <div class="item-controls"><input type="number" name="ndomba_silures" min="0" value="0"></div>
+                    <div class="form-group">
+                        <label>Désignations de la commande (Plats, Boissons, etc.) *</label>
+                        <textarea id="ord_dishes" rows="5" required placeholder="Ex: 2x Ndomba de Silures, 1x Formule Heineken, 1x Chivas 12 ans"></textarea>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h2>3. Bières & Formules</h2>
-                    <label style="color:var(--secondary); margin-bottom:10px; display:block; font-size:0.9rem;">Formules (Pack de 3 bières)</label>
-                    <div class="item-row"><div class="item-info"><div class="item-name">Formule Stella Artois</div></div><div class="item-controls"><input type="number" name="formule_stella" min="0" value="0"></div></div>
-                    <div class="item-row"><div class="item-info"><div class="item-name">Formule Heineken</div></div><div class="item-controls"><input type="number" name="formule_heineken" min="0" value="0"></div></div>
-                    <div class="item-row"><div class="item-info"><div class="item-name">Formule Corona</div></div><div class="item-controls"><input type="number" name="formule_corona" min="0" value="0"></div></div>
+                    <h2>2. Mode de Réception & Coordonnées</h2>
+                    <div class="form-group">
+                        <label>Mode de réception *</label>
+                        <select id="ord_pickup_option" onchange="toggleOrdPickupFields()">
+                            <option value="Sur place (460 rue de Berri)">Sur place (460 rue de Berri)</option>
+                            <option value="À emporter">À emporter</option>
+                        </select>
+                    </div>
+                    
+                    <div id="ord_pickup_details" style="display: none; background: #252525; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                        <div class="form-group"><label>Heure souhaitée pour le retrait :</label><input type="text" id="ord_time" placeholder="Ex: 14h00"></div>
+                    </div>
 
-                    <label style="color:var(--secondary); margin: 15px 0 10px; display:block; font-size:0.9rem;">Bières Importées (À l'unité)</label>
                     <div class="grid-2">
-                        <div class="form-group"><label>Isenbeck</label><input type="number" name="biere_isenbeck" min="0" value="0"></div>
-                        <div class="form-group"><label>Booster</label><input type="number" name="biere_booster" min="0" value="0"></div>
-                        <div class="form-group"><label>Kadji</label><input type="number" name="biere_kadji" min="0" value="0"></div>
-                        <div class="form-group"><label>Petite Guinness</label><input type="number" name="biere_guinness" min="0" value="0"></div>
-                        <div class="form-group"><label>"33" Export</label><input type="number" name="biere_33export" min="0" value="0"></div>
-                        <div class="form-group"><label>Orijin</label><input type="number" name="biere_orijin" min="0" value="0"></div>
+                        <div class="form-group"><label>Numéro de Téléphone *</label><input type="tel" id="ord_phone" required placeholder="(438) 000-0000"></div>
+                        <div class="form-group"><label>Votre Courriel *</label><input type="email" id="ord_email" required placeholder="votre@email.com"></div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <h2>4. Champagnes & Whiskys de Prestige</h2>
-                    <div class="grid-2">
-                        <div class="form-group"><label>Veuve Clicquot</label><input type="number" name="champagne_veuve" min="0" value="0"></div>
-                        <div class="form-group"><label>Moët & Chandon</label><input type="number" name="champagne_moet" min="0" value="0"></div>
-                        <div class="form-group"><label>Chivas 12 ans</label><input type="number" name="whisky_chivas12" min="0" value="0"></div>
-                        <div class="form-group"><label>Chivas 18 ans</label><input type="number" name="whisky_chivas18" min="0" value="0"></div>
-                        <div class="form-group"><label>Aberlour</label><input type="number" name="whisky_aberlour" min="0" value="0"></div>
-                        <div class="form-group"><label>Hennessy</label><input type="number" name="cognac_hennessy" min="0" value="0"></div>
-                        <div class="form-group" style="grid-column: span 2;"><label>Monkey Shooter</label><input type="number" name="shooter_monkey" min="0" value="0"></div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h2>5. Contact</h2>
-                    <div class="grid-2">
-                        <div class="form-group"><label>Adresse Courriel (Email) *</label><input type="email" name="email" required placeholder="votre@email.com"></div>
-                        <div class="form-group"><label>Numéro de Téléphone *</label><input type="tel" name="phone" required placeholder="(438) 000-0000"></div>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-submit" id="orderSubmitBtn">Valider et Envoyer ma Commande</button>
+                <button type="submit" class="btn-submit">Envoyer ma Commande par Courriel ✉️</button>
             </form>
         </div>
 
@@ -311,7 +284,7 @@
 
         // Remplissage automatique des dimanches à venir
         function populateSundays() {
-            const selects = document.querySelectorAll('.event_sunday');
+            const selects = [document.getElementById('event_sunday'), document.getElementById('ord_sunday')];
             
             let date = new Date();
             let day = date.getDay();
@@ -338,23 +311,24 @@
 
         document.addEventListener('DOMContentLoaded', populateSundays);
 
-        function togglePickupFields(selectElem, detailsClassOrId) {
-            const val = selectElem.value;
-            const container = selectElem.closest('form').querySelector('.' + detailsClassOrId) || document.getElementById(detailsClassOrId);
-            if(container) {
-                container.style.display = val.includes("Oui") ? 'block' : 'none';
-            }
+        function togglePickupFields() {
+            const val = document.getElementById('pickup_option').value;
+            document.getElementById('pickup_details').style.display = val.includes("Oui") ? 'block' : 'none';
         }
 
-        // Soumission des formulaires via Formspree
-        function handleFormSubmit(event, formId, successId, btnId) {
+        function toggleOrdPickupFields() {
+            const val = document.getElementById('ord_pickup_option').value;
+            document.getElementById('ord_pickup_details').style.display = val === "À emporter" ? 'block' : 'none';
+        }
+
+        // Soumission de la réservation (Formspree)[cite: 1]
+        function handleFormSubmit(event) {
             event.preventDefault();
-            const submitBtn = document.getElementById(btnId);
-            const originalText = submitBtn.textContent;
+            const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.textContent = "Envoi en cours...";
 
-            const form = document.getElementById(formId);
+            const form = document.getElementById('reservationForm');
             const formData = new FormData(form);
 
             fetch("https://formspree.io/f/xzezbowv", {
@@ -364,34 +338,61 @@
             }).then(response => {
                 if (response.ok) {
                     form.style.display = 'none';
-                    document.getElementById(successId).style.display = 'block';
+                    document.getElementById('success-message').style.display = 'block';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 } else {
                     alert("Une erreur est survenue. Veuillez réessayer.");
                     submitBtn.disabled = false;
-                    submitBtn.textContent = originalText;
+                    submitBtn.textContent = "Valider et Envoyer ma Réservation";
                 }
             }).catch(err => {
                 console.error(err);
                 alert("Erreur de connexion. Vérifiez votre réseau.");
                 submitBtn.disabled = false;
-                submitBtn.textContent = originalText;
+                submitBtn.textContent = "Valider et Envoyer ma Réservation";
             });
         }
 
-        function resetForm(formId, successId) {
-            const form = document.getElementById(formId);
+        // Soumission de la commande directe par Courriel
+        function sendOrderEmail(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('ord_name').value;
+            const sunday = document.getElementById('ord_sunday').value;
+            const dishes = document.getElementById('ord_dishes').value;
+            const mode = document.getElementById('ord_pickup_option').value;
+            const time = document.getElementById('ord_time').value || 'Non spécifié';
+            const phone = document.getElementById('ord_phone').value;
+            const email = document.getElementById('ord_email').value;
+
+            const recipient = "mougnolbrice@gmail.com";
+            const subject = encodeURIComponent("Nouvelle Commande Ndomba de " + name);
+            const body = encodeURIComponent(
+                "Bonjour,\n\nVoici une nouvelle commande passée via le site web :\n\n" +
+                "- Nom / Alias : " + name + "\n" +
+                "- Date : Dimanche " + sunday + "\n" +
+                "- Désignations de la commande :\n" + dishes + "\n\n" +
+                "- Mode de réception : " + mode + (mode === 'À emporter' ? ' (Heure : ' + time + ')' : '') + "\n" +
+                "- Téléphone : " + phone + "\n" +
+                "- Courriel : " + email + "\n\n" +
+                "Cordialement."
+            );
+
+            document.getElementById('orderForm').style.display = 'none';
+            document.getElementById('ord-success').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            window.location.href = `mailto:${recipient}?subject=${subject}&body=${body}`;
+        }
+
+        function resetForm() {
+            const form = document.getElementById('reservationForm');
             form.reset();
             form.style.display = 'block';
-            document.getElementById(successId).style.display = 'none';
-            
-            const btn = form.querySelector('.btn-submit');
-            if(btn) {
-                btn.disabled = false;
-                btn.textContent = btn.id === 'submitBtn' ? "Valider et Envoyer ma Réservation" : "Valider et Envoyer ma Commande";
-            }
-            
-            form.querySelectorAll('.pickup_details').forEach(el => el.style.display = 'none');
+            document.getElementById('success-message').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').textContent = "Valider et Envoyer ma Réservation";
+            document.getElementById('pickup_details').style.display = 'none';
         }
     </script>
 </body>
